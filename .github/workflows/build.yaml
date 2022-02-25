@@ -1,0 +1,33 @@
+name: Build
+on:
+  push:
+    branches:
+      - main
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      target_repo: jault-figure/cpr-target
+      target_repo_dir: cpr-target
+    steps:
+      - uses: actions/checkout@v2
+      - run: git clone --depth 1 https://github.com/${{ env.target_repo }} ${{ env.target_repo_dir }}
+      - run: mkdir -p ${{ env.target_repo }}/${{ github.repository }}
+      - run: date > ${{ env.target_repo }}/${{ github.repository }}/date.txt
+      - uses: peter-evans/create-pull-request@v3
+        with:
+          token: ${{ secrets.PAT }}
+          path: ${{ env.target_repo_dir }}
+          commit-message: Deploy ${{ github.repository }}
+          branch: ${{ github.repository }}
+          base: main
+          delete-branch: true
+          title: Deploy ${{ github.repository }}
+          body: |
+            This is an automated pull request. Upstream details:
+
+            * Repo: `${{ github.repository }}`
+            * Ref: ${{ github.ref_type }} `${{ github.ref_name }}`
+            * Actor: `${{ github.actor }}`
+            * Action Details: job `${{ github.job }}`, workflow `${{ github.workflow }}`, run `${{ github.run_id }}`
+            * Action Link: [view upstream](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
