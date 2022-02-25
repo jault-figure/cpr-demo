@@ -7,17 +7,16 @@ jobs:
   build:
     runs-on: ubuntu-latest
     env:
-      target_repo: jault-figure/cpr-target
-      target_repo_dir: cpr-target
+      target_repo: cpr-target
     steps:
       - uses: actions/checkout@v2
-      - run: git clone --depth 1 https://github.com/${{ env.target_repo }} ${{ env.target_repo_dir }}
+      - run: git clone --depth 1 https://github.com/jault-figure/${{ env.target_repo }}
       - run: mkdir -p ${{ env.target_repo }}/${{ github.repository }}
       - run: date > ${{ env.target_repo }}/${{ github.repository }}/date.txt
       - uses: peter-evans/create-pull-request@v3
         with:
           token: ${{ secrets.PAT }}
-          path: ${{ env.target_repo_dir }}
+          path: ${{ env.target_repo }}
           commit-message: Deploy ${{ github.repository }}
           branch: ${{ github.repository }}
           base: main
