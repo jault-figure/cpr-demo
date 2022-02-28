@@ -6,27 +6,18 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    env:
-      target_repo: cpr-target
     steps:
       - uses: actions/checkout@v2
-      - run: git clone --depth 1 https://github.com/jault-figure/${{ env.target_repo }}
-      - run: mkdir -p ${{ env.target_repo }}/${{ github.repository }}
-      - run: date > ${{ env.target_repo }}/${{ github.repository }}/date.txt
+      - run: git clone --depth 1 https://github.com/jault-figure/cpr-target
+      - run: date > cpr-target/date.txt
       - uses: peter-evans/create-pull-request@v3
         with:
           token: ${{ secrets.PAT }}
-          path: ${{ env.target_repo }}
-          commit-message: Deploy ${{ github.repository }}
-          branch: ${{ github.repository }}
+          path: cpr-target
+          commit-message: Deploy from cpr-demo
+          branch: special-feature-update
           base: main
           delete-branch: true
-          title: Deploy ${{ github.repository }}
+          title: Deploy from cpr-demo
           body: |
-            This is an automated pull request. Upstream details:
-
-            * Repo: `${{ github.repository }}`
-            * Ref: ${{ github.ref_type }} `${{ github.ref_name }}`
-            * Actor: `${{ github.actor }}`
-            * Action Details: job `${{ github.job }}`, workflow `${{ github.workflow }}`, run `${{ github.run_id }}`
-            * Action Link: [view upstream](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
+            This is an automated pull request from cpr-demo
