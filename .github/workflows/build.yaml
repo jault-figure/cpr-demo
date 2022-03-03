@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - run: git clone --depth 1 https://github.com/jault-figure/cpr-target
+      - run: git clone https://github.com/jault-figure/cpr-target
       - run: date > cpr-target/date.txt
       - uses: peter-evans/create-pull-request@v3
         with:
